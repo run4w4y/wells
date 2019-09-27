@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>oil</title>
+    </head>
+
+    <style>
+        .box {
+            color: black;
+            padding: 20px;
+            display: none;
+            margin-top: 5px;
+            margin-left: 100px;
+        }
+        
+        .stack {
+            width: 300px;
+            margin-top: -1px;
+            border: 1px solid black;
+            color: black;
+            text-align: center;
+        }
+
+        .oneline {
+            margin: 0;
+            margin-top: -15px;
+            display: inline-block;
+            padding-inline-start: 0;
+        }
+
+        .oneline li {
+            display: inline-block;
+        }
+
+        .add {
+            display: block;
+            text-decoration: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 25px;
+            border: 1px solid black;
+            color: black;
+            text-align: center;
+            line-height: 25px;
+            margin-left: 75px;
+        }
+
+        .add:hover {
+            text-decoration: none;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <body>
+        <div>
+            <ul class="oneline" style="margin-left: 100px; margin-top: 20px;">
+                <li>
+                    <h5>Имя скважины:</h5>
+                </li>
+                <li>
+                    <select name='wells' method="GET" action="/">
+                        <option>Выберите скважину</option>
+                        {% for i in names %}
+                        <option value="well-{{i['id']}}">{{i['name']}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li>
+                    <a href="/add" class="add"> + </a>
+                </li>
+            </ul>
+        </div>
+
+        {% for i in names %}
+        <div class="well-{{i['id']}} box">
+            {% for j in i['layers'] %}
+            <div class="stack" style="height: {{ (j['to'] - j['from']) / 8 }}px; line-height: {{ (j['to'] - j['from']) / 16 }}px; background: {{ j['color'] }};">
+                <div>
+                    {{ j['name'] }}/{{ j['trans'] }}<br>
+                    <ul class="oneline">
+                        <li>
+                            <ul class="oneline">
+                                <li>
+                                    <h5>от: </h5>
+                                </li>
+                                <li> 
+                                    {{ j['from'] }}
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul class="oneline">
+                                <li>
+                                    <h5>до: </h5>
+                                </li>
+                                <li> 
+                                    {{ j['to'] }}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="stack" style="background: black; color: white; height: 50px;">
+                <div style="margin-top: 7px;">
+                    Oil / Gas<br>
+                    Нефть / Газ
+                </div>
+            </div>
+
+            <br>
+            <ul class="oneline">
+                <li>
+                    <h5>Объем скважины:</h5>
+                </li>
+                <li>
+                    {{i['capacity']}} m^3
+                </li>
+                <li>
+                    <a style="margin-left: 50px;" href="/edit/{{i['id']}}">Edit</a>
+                </li>
+            </ul>
+        </div>
+        {% endfor %}
+    </body>
+
+    <script src="/jquery.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("select").change(function(){
+                $(this).find("option:selected").each(function(){
+                    var optionValue = $(this).attr("value");
+                    if (optionValue) {
+                        $(".box").not("." + optionValue).hide();
+                        $("." + optionValue).show();
+                    } else {
+                        $(".box").hide();
+                    }
+                });
+            }).change();
+        });
+    </script>
+</html>
