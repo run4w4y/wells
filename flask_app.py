@@ -30,16 +30,18 @@ def index():
     ))
     return render_template('index.html', names=names)
 
-
 @app.route('/jquery.js')
 def jquery():
     with open('js/jquery.js') as f:
         return f.read()
 
-
 @app.route('/add', methods=['GET'])
 def add():
     return render_template('add.html')
+
+@app.route('/edit/<int:well_id>')
+def edit(well_id):
+    return render_template('edit.html')
 
 
 if __name__ == '__main__':
